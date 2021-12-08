@@ -7,6 +7,7 @@ plugins {
 	id 'java'
 	id 'org.sonatype.gradle.plugins.scan' version '1.2.0'
 	id "com.palantir.docker" version "0.22.1"
+    id("net.ltgt.errorprone") version "2.0.2"
  }
 
 group = 'org.sonatype.cs'
@@ -40,11 +41,13 @@ dependencies {
 	implementation 'org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.1.20'
 	implementation 'org.apache.commons:commons-csv:1.5'
 	compileOnly 'com.opencsv:opencsv:5.2'
-	implementation 'org.apache.httpcomponents:httpclient:4.5.9'
+	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation 'commons-codec:commons-codec:1.10'
     implementation 'commons-io:commons-io:2.11.0'
 	implementation 'org.json:json:20210307'
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    errorprone("com.google.errorprone:error_prone_core:2.10.0")
+    errorproneJavac("com.google.errorprone:javac:9+181-r4173-1")
 }
 
 nexusIQScan {
