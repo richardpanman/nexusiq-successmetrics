@@ -25,7 +25,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.cs.metrics.model.PayloadItem;
-import org.sonatype.cs.metrics.util.DataLoaderParams;
 import org.sonatype.cs.metrics.util.HelperService;
 import org.sonatype.cs.metrics.util.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +78,38 @@ public class LoaderService {
 	@Value("${iq.api.payload.organisation.name}")
 	private String iqApiOrganisationName;
 
+	@Value("${datafiles.successmetrics}")
+	private String smDatafile;
+
+	@Value("${datafiles.applicationevaluationsmetrics}")
+	private String aeDatafile;
+
+	@Value("${datafiles.componentquarantinemetrics}")
+	private String cqDatafile;
+
+	@Value("${datafiles.componentwaiversmetrics}")
+	private String cwDatafile;
+
+	@Value("${datafiles.policyviolationsmetrics}")
+	private String pvDatafile;
+
+	@Value("${datafiles.quarentinedcomponents}")
+	private String qcompDatafile;
+
+	@Value("${datafiles.autoreleasefromquarentinecomponents}")
+	private String afqcomponentDatafile;
+
+	@Value("${datafiles.autoreleasedfromquarantineconfig}")
+	private String afqconfigDatafile;
+	
+	public static final String smHeader = "applicationId,applicationName,applicationPublicId,";
+	public static final String aeFileHeader = "ApplicationName,EvaluationDate,Stage";
+	public static final String cqFileHeader = "Repository,Format,PackageUrl,QuarantineTime,PolicyName,ThreatLevel";
+	public static final String cwFileHeader = "ApplicationName,Stage,PackageUrl,PolicyName,ThreatLevel,Comment";
+	public static final String pvFileHeader = "PolicyName,Reason,ApplicationName,OpenTime,Component,Stage";
+	public static final String qcompHeader = "repository,quarantine_date,date_cleared,path_name,format,quarantined,policy_name,threat_level,cve";
+	public static final String afqcomponentHeader = "repository,quarantined_date,date_cleared,path_name,format,quarantined,policy_name,threat_level,cve";
+	public static final String afqconfigHeader = "id,name,autoReleaseQuarantineEnabled";
 
 	private String iqSmEndpoint = "api/v2/reports/metrics";
 	
@@ -186,7 +217,7 @@ public class LoaderService {
 	public boolean loadSuccessMetricsData() throws IOException, ParseException {
 
 		String stmt = SqlStatements.MetricsTable;
-		boolean fileLoaded = loadMetricsFile(DataLoaderParams.smDatafile, DataLoaderParams.smHeader, stmt);
+		boolean fileLoaded = loadMetricsFile(smDatafile, smHeader, stmt);
 		boolean doAnalysis = false;
 
 		if (fileLoaded) {
@@ -350,12 +381,12 @@ public class LoaderService {
 	
 	public void loadReports2() throws IOException {
 		
-		applicationEvaluationsFileLoaded = this.loadMetricsFile(DataLoaderParams.aeDatafile, DataLoaderParams.aeFileHeader, SqlStatements.ApplicationEvaluationsTable);
-		policyViolationsDataLoaded = this.loadMetricsFile(DataLoaderParams.pvDatafile, DataLoaderParams.pvFileHeader,  SqlStatements.PolicyViolationsTables);
-		//componentsQuarantineLoaded = this.loadMetricsFile(DataLoaderParams.cqDatafile, DataLoaderParams.cqFileHeader, SqlStatements.ComponentsInQuarantineTable);
-		componentWaiversLoaded = this.loadMetricsFile(DataLoaderParams.cwDatafile, DataLoaderParams.cwFileHeader, SqlStatements.ComponentWaiversTable);
-        quarantinedComponentsLoaded = this.loadMetricsFile(DataLoaderParams.qcompDatafile, DataLoaderParams.qcompHeader, SqlStatements.QuarantinedComponentsTable);
-		autoreleasedFromQuarantineComponentsLoaded = this.loadMetricsFile(DataLoaderParams.afqcomponentDatafile, DataLoaderParams.afqcomponentHeader, SqlStatements.AutoreleasedFromQuarantinedComponentsTable);
+		applicationEvaluationsFileLoaded = this.loadMetricsFile(aeDatafile, aeFileHeader, SqlStatements.ApplicationEvaluationsTable);
+		policyViolationsDataLoaded = this.loadMetricsFile(pvDatafile, pvFileHeader,  SqlStatements.PolicyViolationsTables);
+		//componentsQuarantineLoaded = this.loadMetricsFile(cqDatafile, cqFileHeader, SqlStatements.ComponentsInQuarantineTable);
+		componentWaiversLoaded = this.loadMetricsFile(cwDatafile, cwFileHeader, SqlStatements.ComponentWaiversTable);
+        quarantinedComponentsLoaded = this.loadMetricsFile(qcompDatafile, qcompHeader, SqlStatements.QuarantinedComponentsTable);
+		autoreleasedFromQuarantineComponentsLoaded = this.loadMetricsFile(afqcomponentDatafile, afqcomponentHeader, SqlStatements.AutoreleasedFromQuarantinedComponentsTable);
 		
 	}
 	

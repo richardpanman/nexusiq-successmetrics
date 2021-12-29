@@ -36,7 +36,7 @@ public class FileIoService {
 	@Value("${data.dir}")
 	private String datadir;
 	
-	@Value("${data.successmetrics}")
+	@Value("${datafiles.successmetrics}")
 	private String successmetricsFile;
 	
 	public void writeInsightsCsvFile(String csvFilename, List<String[]> csvData, String beforeDateRange, String afterDateRange) throws IOException {

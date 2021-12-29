@@ -11,13 +11,13 @@ import org.sonatype.cs.metrics.model.DbRowStr;
 import org.sonatype.cs.metrics.service.DbService;
 import org.sonatype.cs.metrics.service.FileIoService;
 import org.sonatype.cs.metrics.service.LoaderService;
-import org.sonatype.cs.metrics.util.DataLoaderParams;
 import org.sonatype.cs.metrics.util.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 
 @Controller
 public class FirewallController {
@@ -35,6 +35,11 @@ public class FirewallController {
     @Value("${data.dir}")
 	private String dataDir;
 
+	@Value("${data.autoreleasedfromquarentinesummary}")
+	public static String afqsDatafile;
+
+	@Value("${data.quarentinedcomponentssummary}")
+	public static String qcsDatafile;
 
     @GetMapping({"/firewall"})
 	public String firewall(Model model) throws IOException {
@@ -66,8 +71,8 @@ public class FirewallController {
         }
 
         /* Firewall summary reports (read the file in here directly) */
-        List<String> quarantinedComponentsSummary = fileIoService.readFWCsvFile(dataDir + "/" + DataLoaderParams.qcsDatafile);
-        List<String> autoReleasedFromQuarantinedComponentsSummary = fileIoService.readFWCsvFile(dataDir + "/" + DataLoaderParams.afqsDatafile);
+        List<String> quarantinedComponentsSummary = fileIoService.readFWCsvFile(dataDir + "/" + qcsDatafile);
+        List<String> autoReleasedFromQuarantinedComponentsSummary = fileIoService.readFWCsvFile(dataDir + "/" + afqsDatafile);
      
         String[] qcs = quarantinedComponentsSummary.get(1).split(",");
         String[] afqc = autoReleasedFromQuarantinedComponentsSummary.get(1).split(",");

@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.sonatype.cs.metrics.service.InsightsAnalysisService;
 import org.sonatype.cs.metrics.service.LoaderService;
 import org.sonatype.cs.metrics.service.SummaryPdfService;
-import org.sonatype.cs.metrics.util.DataLoaderParams;
 import org.sonatype.cs.metrics.util.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +31,7 @@ public class SuccessMetricsApplication implements CommandLineRunner {
 	@Value("${pdf.htmltemplate}")
 	private String pdfTemplate;
 
-	@Value("${data.successmetrics}")
+	@Value("${datafiles.successmetrics}")
 	private String successmetricsDatafile;
 	
 	@Value("${iq.sm.csvfile}")
