@@ -27,14 +27,10 @@ public class PolicyViolationsAgeController {
     private HelperService helperService;
 
     @GetMapping({ "/violationsage" })
-    public String policyViolationsAge(Model model, @RequestParam(name="date", required = false) String comparisonDate) {
+    public String policyViolationsAge(Model model) {
 
         log.info("In PolicyViolationsAgeController");
-        if (comparisonDate == null) {
-            LocalDate dateObj = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            comparisonDate = dateObj.format(formatter);
-        }
+        String comparisonDate = dbService.runSqlStr("SELECT max(EVALUATION_DATE) as pointA FROM APPLICATION_EVALUATION").get(0).getPointA().substring(0, 10);
 
         String PolicyViolationsAge7 = String.format("select policy_name as pointA, application_name as pointB, open_time as pointC, component as pointD, stage as pointE, reason as pointF from policy_violation where parsedatetime(open_time, 'yyyy-MM-dd', 'en') >= PARSEDATETIME('%s', 'yyyy-MM-dd', 'en') - INTERVAL '7' DAY", comparisonDate);
         String PolicyViolationsAge30 = String.format("select policy_name as pointA, application_name as pointB, open_time as pointC, component as pointD, stage as pointE, reason as pointF from policy_violation where parsedatetime(open_time, 'yyyy-MM-dd', 'en') > PARSEDATETIME('%s', 'yyyy-MM-dd', 'en') - INTERVAL '30' DAY and parsedatetime(open_time, 'yyyy-MM-dd', 'en') < PARSEDATETIME('%s', 'yyyy-MM-dd', 'en') - INTERVAL '7' DAY", comparisonDate, comparisonDate);
@@ -57,6 +53,7 @@ public class PolicyViolationsAgeController {
         model.mergeAttributes(age90Map);
 
         model.addAttribute("status", true);
+        model.addAttribute("comparisonDate", comparisonDate);
 
         return "policyViolationsAge";
     }

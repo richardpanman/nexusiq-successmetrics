@@ -28,14 +28,10 @@ public class ApplicationEvaluationsController {
 
 
     @GetMapping({ "/evaluations" })
-    public String applicationEvaluations(Model model, @RequestParam(name="date", required = false) String comparisonDate) {
+    public String applicationEvaluations(Model model) {
 
         log.info("In ApplicationEvaluationsController");
-        if (comparisonDate == null) {
-            LocalDate dateObj = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            comparisonDate = dateObj.format(formatter);
-        }
+        String comparisonDate = dbService.runSqlStr("SELECT max(EVALUATION_DATE) as pointA FROM APPLICATION_EVALUATION").get(0).getPointA().substring(0, 10);
 
         String ApplicationEvaluationsAge7  = String.format("select application_name as pointA, evaluation_date as pointB, stage as pointC from application_evaluation where parsedatetime(evaluation_date, 'yyyy-MM-dd', 'en') >= PARSEDATETIME('%s', 'yyyy-MM-dd') - INTERVAL '7' DAY order by 1", comparisonDate);
         String ApplicationEvaluationsAge30 = String.format("select application_name as pointA, evaluation_date as pointB, stage as pointC from application_evaluation where parsedatetime(evaluation_date, 'yyyy-MM-dd', 'en') > PARSEDATETIME('%s', 'yyyy-MM-dd') - INTERVAL '30' DAY and PARSEDATETIME(evaluation_date, 'yyyy-MM-dd', 'en') < parsedatetime('%s', 'yyyy-MM-dd') - INTERVAL '7' DAY order by 1", comparisonDate, comparisonDate);
@@ -58,6 +54,7 @@ public class ApplicationEvaluationsController {
         model.mergeAttributes(age90Map);
 
         model.addAttribute("status", true);
+        model.addAttribute("comparisonDate", comparisonDate);
 
         return "applicationEvaluations";
     }
