@@ -127,7 +127,7 @@ docker {
      files "${projectDir}/build/libs/successmetrics-*.jar"
 }
 
-gradleLint.rules = ['unused-dependency'] // add as many rules here as you'd like
+gradleLint.rules = ['unused-dependency', 'all-nebula-renames', 'archaic-wrapper', 'unused-exclude-by-dep', 'duplicate-dependency-class']
 
 
 packagejar.dependsOn bootJar
