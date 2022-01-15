@@ -2,9 +2,8 @@
 name: Build and Release nexusiq-successmetrics
 
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types: [published]
 
 env:
   IMAGE_NAME: nexusiq-successmetrics
