@@ -105,7 +105,7 @@ jobs:
 
               # Strip "v" prefix from tag name
               [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-              ./gradlew release
+              ./gradlew -Prelversion=$VERSION release
 
         - name: Create release
           uses: softprops/action-gh-release@v1
