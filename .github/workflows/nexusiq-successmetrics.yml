@@ -62,9 +62,6 @@ jobs:
         - name: Download all artifacts
           uses: actions/download-artifact@v2
 
-        - name: Copy reports2 executables
-          run: cp reports2-*/* releasefiles/reports2
-
         - name: Build release with Gradle
           run: |
               # Strip git ref prefix from version
