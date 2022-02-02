@@ -52,7 +52,6 @@ jobs:
             path: build/libs
 
     create_release:
-        needs: [build_application]
         name: create release bundle
         runs-on: ubuntu-latest
 
