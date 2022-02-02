@@ -51,41 +51,8 @@ jobs:
             name: successmetrics.jar
             path: build/libs
 
-    build_reports2:
-        name: build reports2 executable
-        strategy:
-          matrix:
-            os: [ubuntu-latest, macos-latest, windows-latest]
-
-        runs-on: ${{ matrix.os }}
-
-        steps:
-        - uses: actions/checkout@v2
-
-        - uses: actions/setup-python@v2
-          with:
-            python-version: '3.9.8'
-
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install pyinstaller
-            pip install requests
-
-        - name: Build with pyinstaller
-          run: |
-            cd releasefiles/reports2
-            pyinstaller --noupx --onefile --clean --name reports2-${{ runner.os }} reports2.py
-            chmod +x dist/*
-
-        - name: Upload the artifact
-          uses: actions/upload-artifact@v2
-          with:
-            name: reports2-${{ runner.os }}
-            path: releasefiles/reports2/dist
-
     create_release:
-        needs: [build_application, build_reports2]
+        needs: [build_application]
         name: create release bundle
         runs-on: ubuntu-latest
 
