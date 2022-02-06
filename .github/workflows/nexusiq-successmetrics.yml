@@ -115,4 +115,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: richardpanman/nexusiq-successmetrics
+          tags: ghcr.io/richardpanman/nexusiq-successmetrics
