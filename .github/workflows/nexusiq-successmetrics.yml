@@ -48,14 +48,7 @@ jobs:
     name: build docker image
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+      - uses: actions/checkout@v2
 
       - name: Cache Gradle packages
         uses: actions/cache@v2
@@ -82,14 +75,18 @@ jobs:
       - name: Copy successmetrics jar
         run: cp build/libs/successmetrics-*.jar .
 
-      - name: Log in to registry
-        uses: docker/login-action@v1
+      - uses: docker/setup-buildx-action@v1
+        id: buildx
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          install: true
 
-      - name: Prepare image ID and version
+      - name: Build image
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
 
@@ -108,11 +105,5 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
 
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          registry: ghcr.io
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ghcr.io/richardpanman/nexusiq-successmetrics
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
