@@ -37,6 +37,7 @@ success-metrics
 *.csv
 ./*.json
 bin/*
+view-metrics/bin/*
 datafiles
 *.json
 output/

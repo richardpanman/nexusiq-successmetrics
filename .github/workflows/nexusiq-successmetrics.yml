@@ -1,5 +1,5 @@
 
-name: Build and Release nexusiq-successmetrics
+name: Build and Release nexusiq-view-metrics
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - '*'
 
 env:
-  IMAGE_NAME: nexusiq-successmetrics
+  IMAGE_NAME: nexusiq-successmetrics-view-metrics
   RELEASE_BRANCH: main
   RELEASE_VERSION: ${{ github.ref_name }}
 
@@ -24,7 +24,7 @@ jobs:
           with:
             java-version: '8'
             distribution: 'adopt'
-        
+
         - name: Cache Gradle packages
           uses: actions/cache@v2
           with:
@@ -34,24 +34,24 @@ jobs:
             key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
             restore-keys: |
               ${{ runner.os }}-gradle-
-        
+
         - name: Grant execute permission for gradlew
           run: chmod +x gradlew
-          
+
         - name: Build with Gradle
           run: ./gradlew -Pversion=$RELEASE_VERSION clean build release
 
         - name: Upload the artifact
           uses: actions/upload-artifact@v2
           with:
-            name: successmetrics.jar
-            path: build/libs
+            name: view-metrics.jar
+            path: view-metrics/build/libs
 
         - name: Create release
           uses: softprops/action-gh-release@v1
           if: startsWith(github.ref, 'refs/tags/')
           with:
-            files: successmetrics-*.zip
+            files: view-metrics/view-metrics-*.zip
 
     build_docker_image:
         needs: create_release
@@ -60,14 +60,14 @@ jobs:
         steps:
 
         - uses: actions/checkout@v2
-        
+
         - name: Download the application file
           uses: actions/download-artifact@v2
           with:
-            name: successmetrics.jar
+            name: view-metrics.jar
 
         - name: Build image
-          run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+          run: docker build . --progress=plain --file view-metrics/Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
         - name: Log in to registry
           run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

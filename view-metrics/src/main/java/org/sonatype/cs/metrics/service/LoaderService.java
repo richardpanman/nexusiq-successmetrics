@@ -94,7 +94,9 @@ public class LoaderService {
             if (doAnalysis) {
                 if (!includelatestperiod) {
                     String endPeriod = periods.get("endPeriod").toString();
-                    filterOutLatestPeriod(endPeriod); // it is likely incomplete and only where we know multiple periods available
+                    filterOutLatestPeriod(
+                            endPeriod); // it is likely incomplete and only where we know multiple
+                    // periods available
                     log.info("Removing incomplete data for current month {}", endPeriod);
                 }
 
@@ -230,7 +232,7 @@ public class LoaderService {
             return false;
         }
 
-        if (countLines(metricsFile) == 1){
+        if (countLines(metricsFile) == 1) {
             log.warn("No metrics found for: {}", metricsFile);
         }
 
