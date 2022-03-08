@@ -214,14 +214,14 @@ public class SqlStatements {
     public static final String QUARANTINEDCOMPONENTS =
             "select repository as pointA, quarantineDate as pointB, dateCleared as pointC,"
                 + " displayName as pointD, format as pointE, quarantined as pointF, policyName as"
-                + " pointG, threatLevel as pointH, reason as pointI from QUARANTINED_COMPONENTS order"
-                + " by 6 asc";
+                + " pointG, threatLevel as pointH, reason as pointI from QUARANTINED_COMPONENTS"
+                + " order by 6 asc";
 
     public static final String AUTORELEASEDFROMQUARANTINEDCOMPONENTS =
             "select repository as pointA, quarantineDate as pointB, dateCleared as pointC,"
-                    + " displayName as pointD, format as pointE, quarantined as pointF, policyName as"
-                    + " pointG, threatLevel as pointH, reason as pointI from AUTORELEASED_FROM_QUARANTINED_COMPONENTS order"
-                    + " by 6 asc";
+                + " displayName as pointD, format as pointE, quarantined as pointF, policyName as"
+                + " pointG, threatLevel as pointH, reason as pointI from"
+                + " AUTORELEASED_FROM_QUARANTINED_COMPONENTS order by 6 asc";
 
     public static final String METRICSTABLE =
             "DROP TABLE IF EXISTS METRIC; "
@@ -344,12 +344,12 @@ public class SqlStatements {
                 + " FROM CSVREAD ";
 
     public static final String AUTORELEASEDFROMQUARANTINEDCOMPONENTSTABLE =
-            "DROP TABLE IF EXISTS AUTORELEASED_FROM_QUARANTINED_COMPONENTS;CREATE TABLE AUTORELEASED_FROM_QUARANTINED_COMPONENTS ( "
-                    + " repository VARCHAR(250) NOT NULL,  quarantineDate VARCHAR(250) NOT NULL, "
-                    + " dateCleared VARCHAR(250) DEFAULT NULL,  displayName VARCHAR(250) DEFAULT NULL, "
-                    + " format VARCHAR(250) DEFAULT NULL,  quarantined VARCHAR(1024) DEFAULT NULL, "
-                    + " policyName VARCHAR(250) DEFAULT NULL,  threatLevel VARCHAR(250) DEFAULT NULL, "
-                    + " reason VARCHAR(250) DEFAULT NULL)  AS SELECT repository, quarantineDate,"
-                    + " dateCleared, displayName, format, quarantined, policyName, threatLevel, reason"
-                    + " FROM CSVREAD ";
+            "DROP TABLE IF EXISTS AUTORELEASED_FROM_QUARANTINED_COMPONENTS;CREATE TABLE"
+                + " AUTORELEASED_FROM_QUARANTINED_COMPONENTS (  repository VARCHAR(250) NOT NULL, "
+                + " quarantineDate VARCHAR(250) NOT NULL,  dateCleared VARCHAR(250) DEFAULT NULL, "
+                + " displayName VARCHAR(250) DEFAULT NULL,  format VARCHAR(250) DEFAULT NULL, "
+                + " quarantined VARCHAR(1024) DEFAULT NULL,  policyName VARCHAR(250) DEFAULT NULL, "
+                + " threatLevel VARCHAR(250) DEFAULT NULL,  reason VARCHAR(250) DEFAULT NULL)  AS"
+                + " SELECT repository, quarantineDate, dateCleared, displayName, format,"
+                + " quarantined, policyName, threatLevel, reason FROM CSVREAD ";
 }

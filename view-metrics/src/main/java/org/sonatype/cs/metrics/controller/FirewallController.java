@@ -54,7 +54,8 @@ public class FirewallController {
 
         /* Firewall summary reports (read the files in here directly) */
         List<String> quarantinedComponentsSummary = loadFile(DataLoaderParams.QCSDATAFILE);
-        List<String> autoReleasedFromQuarantinedComponentsSummary = loadFile(DataLoaderParams.AFQCSDATAFILE);
+        List<String> autoReleasedFromQuarantinedComponentsSummary =
+                loadFile(DataLoaderParams.AFQCSDATAFILE);
 
         String[] qcs = quarantinedComponentsSummary.get(1).split(",");
         String[] afqc = autoReleasedFromQuarantinedComponentsSummary.get(1).split(",");
@@ -74,8 +75,7 @@ public class FirewallController {
 
         log.info("Loading file: {}", filepath);
 
-        List<String> summary =
-                FileIoService.fileToStringList(filepath);
+        List<String> summary = FileIoService.fileToStringList(filepath);
 
         log.info("Loaded file: {}", filepath);
 
