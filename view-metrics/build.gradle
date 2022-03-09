@@ -14,8 +14,8 @@ plugins {
 group = 'org.sonatype.cs'
 sourceCompatibility = '8'
 
-def applicationname = 'nexusiq-successmetrics'
-def packagedir = "successmetrics-${version}"
+def applicationname = 'nexusiq-successmetrics-view-metrics'
+def packagedir = "view-metrics-${version}"
 def releasedir = "${packagedir}/${packagedir}"
 def configdir = "${packagedir}/${packagedir}/config"
 
@@ -93,7 +93,7 @@ task copydependencies(type: Copy) {
 
 task packagejar (type: Copy) {
   from 'build/libs'
-	include "successmetrics-${version}.jar"
+	include "view-metrics-${version}.jar"
   into "${releasedir}"
 }
 
@@ -119,7 +119,7 @@ task release(type: Zip) {
 
 docker {
      name "${applicationname}:${project.version}"
-     files "${projectDir}/build/libs/successmetrics-*.jar"
+     files "${projectDir}/build/libs/view-metrics-*.jar"
 }
 
 packagejar.dependsOn bootJar
