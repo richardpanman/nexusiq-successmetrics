@@ -15,7 +15,7 @@ group = 'org.sonatype.cs'
 sourceCompatibility = '8'
 
 def applicationname = 'nexusiq-successmetrics-view-metrics'
-def packagedir = "view-metrics-${version}"
+def packagedir = "view-metrics/view-metrics-${version}"
 def releasedir = "${packagedir}/${packagedir}"
 def configdir = "${packagedir}/${packagedir}/config"
 
