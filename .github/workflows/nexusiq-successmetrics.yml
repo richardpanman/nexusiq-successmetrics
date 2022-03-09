@@ -51,8 +51,7 @@ jobs:
           uses: softprops/action-gh-release@v1
           if: startsWith(github.ref, 'refs/tags/')
           with:
-            files: |
-              **/view-metrics-*.zip
+            files: view-metrics/build/distributions/view-metrics-*.zip
 
     build_docker_image:
         needs: create_release
