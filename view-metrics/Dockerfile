@@ -1,6 +1,6 @@
 FROM  openjdk:8-jdk-alpine
 
-ARG JAR_FILE=./successmetrics-*.jar
+ARG JAR_FILE=./view-metrics-*.jar
 
 COPY ${JAR_FILE} app.jar
 
