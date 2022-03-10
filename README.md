@@ -30,7 +30,7 @@ The [Success Metrics REST API](https://help.sonatype.com/iqserver/automating/res
  * Edit either the included *monthly.json* or *weekly.json* file to adjust the firstTimePeriod (the week or month to start reporting from) and optionally add an end period
 
  Example: the following request body will fetch data for all organisations and applications between Jan 2020 and Sept 2021 on a monthly basis:
- ``` 
+ ```
  {
   "timePeriod": "MONTH",
   "firstTimePeriod": "2020-01",
@@ -44,8 +44,8 @@ The [Success Metrics REST API](https://help.sonatype.com/iqserver/automating/res
 
  * For large installations/datasets, we recommend limiting the extract to a smaller period (e.g. previous 6 months or weeks) or subset of organisations and/or applications. For information on how to include specific application or organization IDs please see the [Success Metrics REST API](https://help.sonatype.com/iqserver/automating/rest-apis/success-metrics-data-rest-api---v2) page for more details.
 
- * A minimum of three data points (weeks or months) are needed to display graphs in the Success Metrics web UI. 
- 
+ * A minimum of three data points (weeks or months) are needed to display graphs in the Success Metrics web UI.
+
  * Only fully completed months (or weeks) are included in the data extract, so in the example above, the script will collect monthly data from January 2020 until September 2021 if the extract had been executed from October 2021 onwards.
 
 ## Run the Metrics Extract
@@ -87,7 +87,7 @@ The resulting data files will be created within the *successmetrics-[releasenumb
 
 # 2. Run the Success Metrics Application
 
-The Success Metrics application is a Java application which can be run from the command line, via our shell wrapper script or inside a Docker Container using our Docker image. 
+The Success Metrics application is a Java application which can be run from the command line, via our shell wrapper script or inside a Docker Container using our Docker image.
 
 There are two modes to the application;
 1. Web mode (interactive)
@@ -113,7 +113,7 @@ The Success Metrics application will perform calculations on the provided metric
 * Insights csv
 * Data Extract csv
 
-### Prerequisites 
+### Prerequisites
 When the Success Metrics application starts there must be a `successmetrics.csv` present containing the data you wish to process, see the previous section of this readme for more details on this.
 
 ## OPTION A - Start using the shell wrapper script

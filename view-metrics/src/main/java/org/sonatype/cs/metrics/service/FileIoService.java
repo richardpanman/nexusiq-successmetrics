@@ -1,18 +1,18 @@
 package org.sonatype.cs.metrics.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.xhtmlrenderer.pdf.ITextRenderer;
-
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.cs.metrics.model.DataExtractObject;
 import org.sonatype.cs.metrics.util.CustomBeanToCSVMappingStrategy;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,7 +30,7 @@ import java.util.List;
 
 @Service
 public class FileIoService {
-    
+
     private static final Logger log = LoggerFactory.getLogger(FileIoService.class);
 
     @Value("${reports.outputdir}")
@@ -123,10 +123,15 @@ public class FileIoService {
         try {
             BufferedWriter writer = Files.newBufferedWriter(Paths.get(csvFilename));
 
-            CustomBeanToCSVMappingStrategy<DataExtractObject> mappingStrategy = new CustomBeanToCSVMappingStrategy<>();
+            CustomBeanToCSVMappingStrategy<DataExtractObject> mappingStrategy =
+                    new CustomBeanToCSVMappingStrategy<>();
             mappingStrategy.setType(DataExtractObject.class);
-            StatefulBeanToCsvBuilder<DataExtractObject> builder = new StatefulBeanToCsvBuilder<DataExtractObject>(writer);
-            StatefulBeanToCsv<DataExtractObject> beanWriter = builder.withMappingStrategy(mappingStrategy).withApplyQuotesToAll(false).build();
+            StatefulBeanToCsvBuilder<DataExtractObject> builder =
+                    new StatefulBeanToCsvBuilder<DataExtractObject>(writer);
+            StatefulBeanToCsv<DataExtractObject> beanWriter =
+                    builder.withMappingStrategy(mappingStrategy)
+                            .withApplyQuotesToAll(false)
+                            .build();
             beanWriter.write(deoList);
 
             writer.close();

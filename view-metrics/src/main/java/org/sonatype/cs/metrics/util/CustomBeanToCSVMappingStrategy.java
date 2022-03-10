@@ -12,7 +12,8 @@ public class CustomBeanToCSVMappingStrategy<T> extends ColumnPositionMappingStra
     @Override
     public String[] generateHeader(T bean) throws CsvRequiredFieldEmptyException {
 
-        String[] headersAsPerFieldName = getFieldMap().generateHeader(bean); // header name based on field name
+        String[] headersAsPerFieldName =
+                getFieldMap().generateHeader(bean); // header name based on field name
 
         String[] header = new String[headersAsPerFieldName.length];
 
@@ -20,10 +21,12 @@ public class CustomBeanToCSVMappingStrategy<T> extends ColumnPositionMappingStra
 
             BeanField beanField = findField(i);
 
-            String columnHeaderName = extractHeaderName(beanField); // header name based on @CsvBindByName annotation
+            String columnHeaderName =
+                    extractHeaderName(beanField); // header name based on @CsvBindByName annotation
 
             if (columnHeaderName.isEmpty()) // No @CsvBindByName is present
-                columnHeaderName = headersAsPerFieldName[i]; // defaults to header name based on field name
+            columnHeaderName =
+                        headersAsPerFieldName[i]; // defaults to header name based on field name
 
             header[i] = columnHeaderName;
         }
@@ -34,11 +37,15 @@ public class CustomBeanToCSVMappingStrategy<T> extends ColumnPositionMappingStra
     }
 
     private String extractHeaderName(final BeanField beanField) {
-        if (beanField == null || beanField.getField() == null || beanField.getField().getDeclaredAnnotationsByType(CsvBindByName.class).length == 0) {
+        if (beanField == null
+                || beanField.getField() == null
+                || beanField.getField().getDeclaredAnnotationsByType(CsvBindByName.class).length
+                        == 0) {
             return StringUtils.EMPTY;
         }
 
-        final CsvBindByName bindByNameAnnotation = beanField.getField().getDeclaredAnnotationsByType(CsvBindByName.class)[0];
+        final CsvBindByName bindByNameAnnotation =
+                beanField.getField().getDeclaredAnnotationsByType(CsvBindByName.class)[0];
         return bindByNameAnnotation.column();
     }
 }
