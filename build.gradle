@@ -3,9 +3,16 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id 'org.sonatype.gradle.plugins.scan' version '1.2.0'
     id "base"
+    id "jacoco"
+}
+
+repositories {
+    mavenCentral()
 }
 
 subprojects{
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
     repositories {
         mavenCentral()
     }
@@ -61,3 +68,32 @@ build.doFirst {
 }
 
 release.dependsOn packageJar
+
+// TODO https://docs.gradle.org/6.4-rc-1/samples/sample_jvm_multi_project_with_code_coverage.html
+
+task codeCoverageReport (type: JacocoReport) {
+    // If a subproject applies the 'jacoco' plugin, add the result it to the report
+    subprojects { subproject ->
+        subproject.plugins.withType(JacocoPlugin).configureEach {
+            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).configureEach { testTask ->
+                sourceSets subproject.sourceSets.main
+                executionData(testTask)
+            }
+
+            // To automatically run `test` every time `./gradlew codeCoverageReport` is called,
+            // you may want to set up a task dependency between them as shown below.
+            // Note that this requires the `test` tasks to be resolved eagerly (see `forEach`) which
+            // may have a negative effect on the configuration time of your build.
+            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).forEach {
+                rootProject.tasks.codeCoverageReport.dependsOn(it)
+            }
+        }
+    }
+
+    // enable the different report types (html, xml, csv)
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled true
+    }
+}
