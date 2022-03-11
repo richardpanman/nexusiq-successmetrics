@@ -21,7 +21,7 @@ public class WaiversTest {
             JsonArray jsonArray =
                     Json.createReader(
                                     new FileInputStream(
-                                            "src/test/java/org/sonatype/cs/getmetrics/resources/ComponentWaivers.json"))
+                                            "src/test/java/org/sonatype/cs/getmetrics/resources/componentWaivers.json"))
                             .readObject()
                             .getJsonArray("applicationWaivers");
             List<String[]> data = Waivers.doWaivers("application", jsonArray);
@@ -63,7 +63,7 @@ public class WaiversTest {
             JsonArray jsonArray =
                     Json.createReader(
                                     new FileInputStream(
-                                            "src/test/java/org/sonatype/cs/getmetrics/resources/ComponentWaivers.json"))
+                                            "src/test/java/org/sonatype/cs/getmetrics/resources/componentWaivers.json"))
                             .readObject()
                             .getJsonArray("repositoryWaivers");
             List<String[]> data = Waivers.doWaivers("repository", jsonArray);
@@ -91,7 +91,7 @@ public class WaiversTest {
             JsonReader jsonReader =
                     Json.createReader(
                             new FileInputStream(
-                                    "src/test/java/org/sonatype/cs/getmetrics/resources/ComponentWaivers.json"));
+                                    "src/test/java/org/sonatype/cs/getmetrics/resources/componentWaivers.json"));
             String[] header = {
                 "applicationName",
                 "stage",
