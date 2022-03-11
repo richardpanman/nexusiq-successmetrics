@@ -40,13 +40,13 @@ jobs:
           run: chmod +x gradlew
 
         - name: Build with Gradle
-          run: ./gradlew -Pversion=$RELEASE_VERSION clean build release
+          run: ./gradlew -Pversion=$RELEASE_VERSION clean build release codeCoverageReport
 
         - name: Upload the artifact
           uses: actions/upload-artifact@v2
           with:
-            name: view-metrics.jar
-            path: view-metrics/build/libs
+            name: jar_files
+            path: '*/build/libs'
 
         - name: Create release
           uses: softprops/action-gh-release@v1
@@ -71,6 +71,11 @@ jobs:
         steps:
           - name: Checkout repository
             uses: actions/checkout@v2
+
+          - name: Download the application file
+            uses: actions/download-artifact@v2
+            with:
+              name: jar_files
 
           - name: Log in to the Container registry
             uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
