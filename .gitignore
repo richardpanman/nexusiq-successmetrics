@@ -186,4 +186,5 @@ dmypy.json
 datafiles
 iqmetrics
 
-!*/src/test/resources/**
+!get-metrics/src/test/java/org/sonatype/cs/getmetrics/resources/**
+!view-metrics/src/test/resources
