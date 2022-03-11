@@ -46,7 +46,9 @@ jobs:
           uses: actions/upload-artifact@v2
           with:
             name: jar_files
-            path: '*/build/libs'
+            path: |
+              get-metrics/build/libs/
+              view-metrics/build/libs/
 
         - name: Create release
           uses: softprops/action-gh-release@v1
