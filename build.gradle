@@ -4,6 +4,7 @@ plugins {
     id 'org.sonatype.gradle.plugins.scan' version '1.2.0'
     id "base"
     id "jacoco"
+    id "java"
 }
 
 repositories {
@@ -25,23 +26,50 @@ subprojects{
         stage = 'build'
         allConfigurations = true
     }
+
+    test {
+      useJUnitPlatform()
+      testLogging {
+        events "passed", "skipped", "failed"
+      }
+    }
+
+  jacocoTestReport {
+    reports{
+      xml.enabled true
+          csv.enabled true
+    }
+      dependsOn test // tests are required to run before generating the report
+  }
 }
 
 def applicationname = "nexusiq-successmetrics-${version}"
 def releasedir = "${applicationname}/${applicationname}"
 def viewMetricsDir = "${releasedir}/view-metrics"
+def getMetricsDir = "${releasedir}/get-metrics"
 
-task packageJar (type: Copy) {
-  dependsOn ['view-metrics:bootJar']
-
+task packageViewFiles (type: Copy) {
+  dependsOn ':view-metrics:bootJar', ':assemble'
   from('view-metrics/build/libs') {
   	include "view-metrics-${version}.jar"
   }
   from('view-metrics/releasefiles') {
     include '**'
+    filter(ReplaceTokens, tokens: [APPVER: project.version])
   }
   into "${viewMetricsDir}"
-  filter(ReplaceTokens, tokens: [APPVER: project.version])
+}
+
+task packageGetFiles (type: Copy) {
+  dependsOn ':get-metrics:bootJar', ':assemble'
+  from('get-metrics/build/libs') {
+  	include "get-metrics-${version}.jar"
+  }
+  from('get-metrics/releasefiles') {
+    include '**'
+    filter(ReplaceTokens, tokens: [APPVER: project.version])
+  }
+  into "${getMetricsDir}"
 }
 
 task packageViewMetricsConfig (type: Copy) {
@@ -51,8 +79,15 @@ task packageViewMetricsConfig (type: Copy) {
   into "${viewMetricsDir}/config"
 }
 
+task packageGetMetricsConfig (type: Copy) {
+  from('get-metrics/src/main/resources'){
+    include "application.properties"
+  }
+  into "${getMetricsDir}/config"
+}
+
 task release (type: Zip) {
-  dependsOn ':packageJar', ':packageViewMetricsConfig'
+  dependsOn ':packageViewFiles', ':packageViewMetricsConfig', ':packageGetFiles', ':packageGetMetricsConfig'
 	from "${applicationname}"
 	archiveName "${applicationname}.zip"
 	destinationDir(file(projectDir))
@@ -63,15 +98,13 @@ clean.doFirst {
 	delete "${applicationname}.zip"
 }
 
-build.doFirst {
-	mkdir "${applicationname}"
+release.doFirst {
+  mkdir "${releasedir}/iqmetrics"
+  mkdir "${releasedir}/datafiles"
 }
 
-release.dependsOn packageJar
-
-// TODO https://docs.gradle.org/6.4-rc-1/samples/sample_jvm_multi_project_with_code_coverage.html
-
 task codeCoverageReport (type: JacocoReport) {
+    dependsOn(':get-metrics:jacocoTestReport', ':view-metrics:jacocoTestReport')
     // If a subproject applies the 'jacoco' plugin, add the result it to the report
     subprojects { subproject ->
         subproject.plugins.withType(JacocoPlugin).configureEach {
@@ -79,11 +112,6 @@ task codeCoverageReport (type: JacocoReport) {
                 sourceSets subproject.sourceSets.main
                 executionData(testTask)
             }
-
-            // To automatically run `test` every time `./gradlew codeCoverageReport` is called,
-            // you may want to set up a task dependency between them as shown below.
-            // Note that this requires the `test` tasks to be resolved eagerly (see `forEach`) which
-            // may have a negative effect on the configuration time of your build.
             subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).forEach {
                 rootProject.tasks.codeCoverageReport.dependsOn(it)
             }
