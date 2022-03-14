@@ -5,6 +5,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.cs.getmetrics.util.FilenameInfo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
@@ -22,7 +23,8 @@ import java.util.List;
 public class FileIoService {
     private static final Logger log = LoggerFactory.getLogger(FileIoService.class);
 
-    private String metricsDir = "iqmetrics";
+    @Value("${metricsDir}")
+    private String metricsDir;
 
     public void writeCsvFile(String filename, List<String[]> data) {
 
