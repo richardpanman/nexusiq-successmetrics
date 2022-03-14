@@ -18,6 +18,10 @@ subprojects{
         mavenCentral()
     }
 
+    jar {
+      enabled = false
+    }
+
     nexusIQScan {
         username = 'admin'
         password = 'admin123'
