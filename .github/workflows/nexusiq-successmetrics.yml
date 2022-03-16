@@ -50,18 +50,19 @@ jobs:
               get-metrics/build/libs/
               view-metrics/build/libs/
 
-        - name: Publish PDF Document
-          uses: shrink/actions-document-publish@v1
+        - name: Create PDF Documents
+          uses: baileyjm02/markdown-to-pdf@v1
           id: publish-document
           with:
-            sources: 'README.md'
+            input_dir: .
+            output_dir: pdfs
 
         - name: Upload Document
           uses: actions/upload-artifact@v2
           id: upload-document
           with:
-            name: 'README.pdf'
-            path: ${{ steps.publish-document.outputs.pdf }}
+            name: 'Supporting documents'
+            path: pdfs
 
         - name: Create release
           uses: softprops/action-gh-release@v1
