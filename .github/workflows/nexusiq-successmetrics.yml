@@ -54,14 +54,14 @@ jobs:
           uses: baileyjm02/markdown-to-pdf@v1
           id: publish-document
           with:
-            input_dir: .
+            input_dir: docs
             output_dir: pdfs
 
         - name: Upload Document
           uses: actions/upload-artifact@v2
           id: upload-document
           with:
-            name: 'docs'
+            name: docs
             path: pdfs
 
         - name: Create release
@@ -80,9 +80,9 @@ jobs:
           matrix:
             include:
               - dockerfile: ./get-metrics/Dockerfile
-                image: ghcr.io/sonatype-nexus-community/nexusiq-successmetrics-get-metrics
+                image: ghcr.io/${{github.repository}}-get-metrics
               - dockerfile: ./view-metrics/Dockerfile
-                image: ghcr.io/sonatype-nexus-community/nexusiq-successmetrics-view-metrics
+                image: ghcr.io/${{github.repository}}-view-metrics
         permissions:
           contents: read
           packages: write
