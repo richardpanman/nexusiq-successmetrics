@@ -42,13 +42,26 @@ jobs:
         - name: Build with Gradle
           run: ./gradlew -Pversion=$RELEASE_VERSION clean build release codeCoverageReport
 
-        - name: Upload the artifact
+        - name: Upload the jars as artifact
           uses: actions/upload-artifact@v2
           with:
             name: jar_files
             path: |
               get-metrics/build/libs/
               view-metrics/build/libs/
+
+        - name: Publish PDF Document
+          uses: shrink/actions-document-publish@v1
+          id: publish-document
+          with:
+            sources: 'README.md'
+
+        - name: Upload Document
+          uses: actions/upload-artifact@v2
+          id: upload-document
+          with:
+            name: 'README.pdf'
+            path: ${{ steps.publish-document.outputs.pdf }}
 
         - name: Create release
           uses: softprops/action-gh-release@v1
