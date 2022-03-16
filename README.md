@@ -2,7 +2,7 @@
 
 IQ Server has a number of REST APIs which can be used to extract policy evaluation, violation and remediation data. The Success Metrics get-metrics application extracts common metrics using this API and the view-metrics application aggregates the data into web or text reports.
 
-*For releases after release 90* please follow the installation and usage instructions attached as assets in that release.
+*For releases after release 90* please follow the README instructions attached as assets in that release.
 
 For other releases please follow these installation and usage instructions:
 
