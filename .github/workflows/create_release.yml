@@ -40,6 +40,13 @@ jobs:
         - name: Build with Gradle
           run: ./gradlew -Pversion=$RELEASE_VERSION clean build release codeCoverageReport
 
+        - name: Create PDF Documents
+          uses: baileyjm02/markdown-to-pdf@v1
+          id: publish-document
+          with:
+            input_dir: ./README.md
+            output_dir: pdfs
+
         - name: Upload the artifact
           uses: actions/upload-artifact@v2
           with:
@@ -47,6 +54,7 @@ jobs:
             path: |
               get-metrics/build/libs/
               view-metrics/build/libs/
+              pdfs/
 
         - name: Create release
           uses: softprops/action-gh-release@v1
