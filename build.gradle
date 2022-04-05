@@ -32,7 +32,9 @@ subprojects{
     }
 
     test {
-      useJUnitPlatform()
+      useJUnitPlatform(){
+        excludeTags "integration"
+      }
       testLogging {
         events "passed", "skipped", "failed"
       }
