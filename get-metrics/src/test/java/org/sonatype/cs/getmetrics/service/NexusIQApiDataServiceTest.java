@@ -3,6 +3,7 @@ package org.sonatype.cs.getmetrics.service;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -14,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 import javax.json.Json;
 
+@Tag("fast")
 public class NexusIQApiDataServiceTest {
     @Test
     void testGetJsonReaderFromURLConnection() {

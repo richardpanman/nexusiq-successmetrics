@@ -1,8 +1,10 @@
 package org.sonatype.cs.metrics.service;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Tag("fast")
 public class LoaderServiceTest {
     @Test
     void testIsHeaderValid() {

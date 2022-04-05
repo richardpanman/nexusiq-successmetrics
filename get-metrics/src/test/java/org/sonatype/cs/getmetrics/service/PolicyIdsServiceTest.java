@@ -1,6 +1,7 @@
 package org.sonatype.cs.getmetrics.service;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -11,6 +12,7 @@ import java.io.FileNotFoundException;
 import javax.json.Json;
 import javax.json.JsonObject;
 
+@Tag("fast")
 public class PolicyIdsServiceTest {
     @Test
     void testGetPolicyIds() {

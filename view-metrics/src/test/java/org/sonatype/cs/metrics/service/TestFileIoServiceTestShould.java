@@ -2,12 +2,14 @@ package org.sonatype.cs.metrics.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Tag("fast")
 @DisplayName("The fileIO service should")
 public class TestFileIoServiceTestShould {
     @DisplayName("return true if a file exists")

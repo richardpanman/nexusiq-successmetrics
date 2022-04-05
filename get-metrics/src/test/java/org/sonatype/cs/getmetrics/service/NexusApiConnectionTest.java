@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 
 import org.apache.http.HttpException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -13,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URLConnection;
 
+@Tag("fast")
 public class NexusApiConnectionTest {
     private NexusIqApiConnectionService nexusIqApiConnectionService =
             new NexusIqApiConnectionService();

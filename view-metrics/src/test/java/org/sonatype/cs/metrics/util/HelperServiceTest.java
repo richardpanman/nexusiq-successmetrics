@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.sonatype.cs.metrics.model.DbRow;
 import org.sonatype.cs.metrics.model.DbRowStr;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Tag("fast")
 public class HelperServiceTest {
     @Test
     void testCalculateDivision() {
@@ -89,5 +91,23 @@ public class HelperServiceTest {
         Assertions.assertThrows(
                 java.time.format.DateTimeParseException.class,
                 () -> HelperService.convertDateStr("Bad text"));
+    }
+
+    @Test
+    void testRoundDouble() {
+        Assertions.assertEquals(0.1D, HelperService.roundDouble(0.11D, 1));
+        Assertions.assertEquals(1D, HelperService.roundDouble(0.99D, 1));
+        Assertions.assertEquals(1D, HelperService.roundDouble(1.11D, 0));
+        Assertions.assertThrows(
+                IllegalArgumentException.class, () -> HelperService.roundDouble(0.11D, -1));
+    }
+
+    @Test
+    void testRoundFloat() {
+        Assertions.assertEquals(0.1f, HelperService.roundFloat(0.11f, 1));
+        Assertions.assertEquals(1f, HelperService.roundFloat(0.99f, 1));
+        Assertions.assertEquals(1f, HelperService.roundFloat(1.11f, 0));
+        Assertions.assertThrows(
+                IllegalArgumentException.class, () -> HelperService.roundFloat(0.11f, -1));
     }
 }

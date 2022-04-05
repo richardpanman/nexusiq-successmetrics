@@ -2,6 +2,7 @@ package org.sonatype.cs.getmetrics.reports;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.sonatype.cs.getmetrics.service.FileIoService;
 
@@ -13,6 +14,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
+@Tag("unit")
 public class QuarantinedComponentsSummaryTest {
     @Test
     void testGetQuarantinedComponentsSummaryFromData() {

@@ -1,6 +1,7 @@
 package org.sonatype.cs.getmetrics.util;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.sonatype.cs.getmetrics.service.UtilService;
 
@@ -10,6 +11,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Tag("fast")
 public class UtilServiceTest {
     @Test
     void testRemoveLastChar() {

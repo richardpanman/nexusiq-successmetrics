@@ -1,5 +1,7 @@
 package org.sonatype.cs.getmetrics;
 
+import org.apache.http.HttpException;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.cs.getmetrics.reports.*;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.io.IOException;
 
 @SpringBootApplication
 public class GetMetricsApplication implements CommandLineRunner {
@@ -52,7 +56,7 @@ public class GetMetricsApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) throws JSONException, IOException, HttpException {
         log.info("Starting GetMetrics Application");
 
         fileIoService.initMetricsDir();

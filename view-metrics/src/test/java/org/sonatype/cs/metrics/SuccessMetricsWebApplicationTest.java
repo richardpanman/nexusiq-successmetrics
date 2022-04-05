@@ -7,6 +7,7 @@ import org.approvaltests.Approvals;
 import org.approvaltests.namer.NamedEnvironment;
 import org.approvaltests.namer.NamerFactory;
 import org.junit.Assert;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -27,6 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 // https://spring.io/guides/gs/testing-web/
+
+@Tag("integration")
 @SpringBootTest(
         properties = {"metrics.dir=src/test/resources/iqmetrics", "spring.profiles.active=web"},
         webEnvironment = WebEnvironment.RANDOM_PORT)

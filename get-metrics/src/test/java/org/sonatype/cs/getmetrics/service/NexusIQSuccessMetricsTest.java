@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.io.InputStream;
 
 // TODO - syntax checking on inputs in NexusIQSuccessMetrics, currently essentially none
 
+@Tag("fast")
 @DisplayName("NexusIQSuccessMetrics should")
 public class NexusIQSuccessMetricsTest {
     private NexusIqApiConnectionService nexusIqApiConnectionService;
@@ -33,6 +35,7 @@ public class NexusIQSuccessMetricsTest {
     @Test
     @DisplayName("write a CSV file when NexusIQ API returns a successful response")
     void testCreateSuccessMetricsCsvFile() {
+        // given
         NexusIQSuccessMetrics nexusIQSuccessMetrics =
                 new NexusIQSuccessMetrics(
                         nexusIqApiConnectionService,
