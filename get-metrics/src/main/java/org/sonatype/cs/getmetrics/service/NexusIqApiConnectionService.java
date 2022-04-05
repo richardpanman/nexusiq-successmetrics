@@ -128,4 +128,59 @@ class NexusIqApiConnectionService {
         urlConnection.setDoOutput(true);
         return urlConnection;
     }
+
+    public String retrieveJsonFromIq(
+            String user, String password, String url, String api, String endpoint)
+            throws IOException, HttpException {
+        if ("/".equals(UtilService.lastChar(url))) {
+            url = UtilService.removeLastChar(url);
+        }
+        HttpURLConnection urlConnection =
+                prepareHttpURLGetForJson(user, password, url, api, endpoint);
+        return executeHttpURLGetForJson(urlConnection);
+    }
+
+    public HttpURLConnection prepareHttpURLGetForJson(
+            String user, String password, String url, String api, String endpoint)
+            throws IOException {
+        String metricsUrl = url + api + endpoint;
+        HttpURLConnection urlConnection = createAuthorisedUrlConnection(user, password, metricsUrl);
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setDoOutput(true);
+        return urlConnection;
+    }
+
+    public String executeHttpURLGetForJson(HttpURLConnection urlConnection)
+            throws IOException, HttpException {
+        String response = "";
+        try {
+            BufferedReader bufferedReader =
+                    new BufferedReader(
+                            new InputStreamReader(
+                                    (InputStream) urlConnection.getContent(),
+                                    StandardCharsets.UTF_8));
+            response = bufferedReader.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            throw new HttpException(
+                    "Failed with HTTP error code : "
+                            + urlConnection.getResponseCode()
+                            + " ["
+                            + urlConnection.getResponseMessage()
+                            + "]");
+        }
+
+        int statusCode = urlConnection.getResponseCode();
+        urlConnection.disconnect();
+
+        if (statusCode != 200) {
+            throw new HttpException(
+                    "Failed with HTTP error code : "
+                            + statusCode
+                            + " ["
+                            + urlConnection.getResponseMessage()
+                            + "]");
+        }
+        return response;
+    }
 }

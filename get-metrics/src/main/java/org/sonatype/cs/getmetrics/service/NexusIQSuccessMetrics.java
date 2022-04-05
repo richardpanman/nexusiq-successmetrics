@@ -2,13 +2,6 @@ package org.sonatype.cs.getmetrics.service;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpException;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,17 +72,17 @@ public class NexusIQSuccessMetrics {
     private String getPayload() throws IOException, JSONException, HttpException {
         log.info("Making api payload");
 
+        if (iqApiFirstTimePeriod == null) {
+            throw new IllegalArgumentException(
+                    "No start period specified (iq.api.payload.timeperiod.first)");
+        }
+
         PayloadItem firstTimePeriod =
                 new PayloadItem(UtilService.removeQuotesFromString(iqApiFirstTimePeriod));
         PayloadItem lastTimePeriod =
                 new PayloadItem(UtilService.removeQuotesFromString(iqApiLastTimePeriod));
         PayloadItem organisationName = new PayloadItem(iqApiOrganisationName);
         PayloadItem applicationName = new PayloadItem(iqApiApplicationName);
-
-        if (!firstTimePeriod.isExists()) {
-            throw new IllegalArgumentException(
-                    "No start period specified (iq.api.payload.timeperiod.first)");
-        }
 
         JSONObject ajson = new JSONObject();
         ajson.put("timePeriod", UtilService.removeQuotesFromString(iqSmPeriod.toUpperCase()));
@@ -118,8 +111,9 @@ public class NexusIQSuccessMetrics {
 
     private String[] getIds(String endPointName, String namesStr)
             throws IOException, HttpException {
-        String apiEndpoint = iqApi + "/" + endPointName;
-        String content = getIqData(apiEndpoint);
+        String content =
+                nexusIqApiConnectionService.retrieveJsonFromIq(
+                        iqUser, iqPwd, iqUrl, iqApi, "/" + endPointName);
 
         String[] names = namesStr.split(",");
         String[] ids = new String[names.length];
@@ -153,40 +147,10 @@ public class NexusIQSuccessMetrics {
                 break;
             }
         }
-
+        if (s == null) {
+            throw new IllegalArgumentException(
+                    aoName + " is unknown to IQ when listing " + endpoint);
+        }
         return s;
-    }
-
-    private String getIqData(String endpoint) throws IOException, HttpException {
-        if ("/".equals(UtilService.lastChar(iqUrl))) {
-            iqUrl = UtilService.removeLastChar(iqUrl);
-        }
-        String url = iqUrl + endpoint;
-        log.info("Fetching data from: {}", url);
-
-        HttpGet request = new HttpGet(url);
-
-        String auth = iqUser + ":" + iqPwd;
-        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
-        String authHeader = "Basic " + new String(encodedAuth, StandardCharsets.ISO_8859_1);
-
-        request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
-        request.addHeader("Content-Type", "application/json");
-
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse response = client.execute(request);
-
-        int statusCode = response.getStatusLine().getStatusCode();
-
-        if (statusCode != 200) {
-            throw new HttpException(
-                    "Failed with HTTP error code : "
-                            + statusCode
-                            + " ["
-                            + response.getStatusLine().getReasonPhrase()
-                            + "]");
-        }
-
-        return EntityUtils.toString(response.getEntity());
     }
 }
