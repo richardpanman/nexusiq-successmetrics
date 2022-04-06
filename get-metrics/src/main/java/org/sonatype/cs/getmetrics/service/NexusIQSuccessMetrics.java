@@ -45,11 +45,11 @@ public class NexusIQSuccessMetrics {
             @Value("${iq.url}") String iqUrl,
             @Value("${iq.user}") String iqUser,
             @Value("${iq.passwd}") String iqPwd,
-            @Value("${iq.api.sm.period}") String iqSmPeriod,
-            @Value("${iq.api.sm.payload.timeperiod.first}") String iqApiFirstTimePeriod,
-            @Value("${iq.api.sm.payload.timeperiod.last}") String iqApiLastTimePeriod,
-            @Value("${iq.api.sm.payload.application.name}") String iqApiApplicationName,
-            @Value("${iq.api.sm.payload.organisation.name}") String iqApiOrganisationName,
+            @Value("${timeperiod.duration}") String iqSmPeriod,
+            @Value("${first.timeperiod}") String iqApiFirstTimePeriod,
+            @Value("${last.timeperiod}") String iqApiLastTimePeriod,
+            @Value("${application.names}") String iqApiApplicationName,
+            @Value("${organisation.names}") String iqApiOrganisationName,
             @Value("${iq.api}") String iqApi,
             @Value("${iq.api.reports}") String iqReportsEndpoint) {
         this.nexusIqApiConnectionService = nexusIqApiConnectionService;

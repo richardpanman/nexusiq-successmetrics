@@ -1,5 +1,42 @@
 # Success Metrics Application for IQ Server
 
+- [Success Metrics Application for IQ Server](#success-metrics-application-for-iq-server)
+  - [Installation](#installation)
+  - [Fetch metrics from the IQ Server (get-metrics)](#fetch-metrics-from-the-iq-server-get-metrics)
+    - [Get-Metrics Command Line Options](#get-metrics-command-line-options)
+      - [Nexus IQ server details](#nexus-iq-server-details)
+      - [Metrics](#metrics)
+      - [Time period for which Success Metrics data should be fetched](#time-period-for-which-success-metrics-data-should-be-fetched)
+      - [Limit extracted data to given organisations or applications](#limit-extracted-data-to-given-organisations-or-applications)
+    - [Running get-metrics using Java](#running-get-metrics-using-java)
+      - [Get-metrics command line examples using Java on Linux/Mac machines](#get-metrics-command-line-examples-using-java-on-linuxmac-machines)
+        - [Fetch successmetrics data since 2021-07 on Mac/Linux](#fetch-successmetrics-data-since-2021-07-on-maclinux)
+        - [Fetch successmetrics data between 2021-07 and 2022-01 using Java on Mac/Linux](#fetch-successmetrics-data-between-2021-07-and-2022-01-using-java-on-maclinux)
+        - [Fetch weekly successmetrics data between 2021-W07 and 2022-W01 using Java on Mac/Linux](#fetch-weekly-successmetrics-data-between-2021-w07-and-2022-w01-using-java-on-maclinux)
+        - [Fetch successmetrics data since 2021-07 for organisations org1 and org2 using Java on Mac/Linux](#fetch-successmetrics-data-since-2021-07-for-organisations-org1-and-org2-using-java-on-maclinux)
+        - [Fetch successmetrics data since 2021-07 for applications app1 and app2 using Java on Mac/Linux](#fetch-successmetrics-data-since-2021-07-for-applications-app1-and-app2-using-java-on-maclinux)
+      - [Running get-metrics using Java](#running-get-metrics-using-java-1)
+        - [Fetch successmetrics data since 2021-07 using Java on Windows](#fetch-successmetrics-data-since-2021-07-using-java-on-windows)
+        - [Fetch successmetrics data between 2021-07 and 2022-01 using Java on Windows](#fetch-successmetrics-data-between-2021-07-and-2022-01-using-java-on-windows)
+        - [Fetch weekly successmetrics data between 2021-W07 and 2022-W01 using Java on Windows](#fetch-weekly-successmetrics-data-between-2021-w07-and-2022-w01-using-java-on-windows)
+        - [Fetch successmetrics data since 2021-07 for organisations org1 and org2 using Java on Windows](#fetch-successmetrics-data-since-2021-07-for-organisations-org1-and-org2-using-java-on-windows)
+        - [Fetch successmetrics data since 2021-07 for applications app1 and app2 on Mac/Linux](#fetch-successmetrics-data-since-2021-07-for-applications-app1-and-app2-on-maclinux)
+    - [Running get-metrics using Docker](#running-get-metrics-using-docker)
+  - [view-metrics](#view-metrics)
+    - [Web (interactive) mode](#web-interactive-mode)
+    - [Data extract (non-interactive) mode](#data-extract-non-interactive-mode)
+    - [View-metrics Command Line Options](#view-metrics-command-line-options)
+  - [Running the view-metrics application](#running-the-view-metrics-application)
+    - [Running view-metrics using Java](#running-view-metrics-using-java)
+      - [View-metrics command line examples - Mac/ Linux](#view-metrics-command-line-examples---mac-linux)
+        - [Web (interactive mode) using Java on Linux/Mac](#web-interactive-mode-using-java-on-linuxmac)
+        - [Data (non-interactive mode) using Java on Linux/Mac](#data-non-interactive-mode-using-java-on-linuxmac)
+      - [View-metrics command line examples - Windows](#view-metrics-command-line-examples---windows)
+        - [Web (interactive mode) using Java on Windows](#web-interactive-mode-using-java-on-windows)
+        - [Data (non-interactive mode) using Java on Windows](#data-non-interactive-mode-using-java-on-windows)
+    - [Running view-metrics using Docker](#running-view-metrics-using-docker)
+  - [The Fine Print](#the-fine-print)
+
 IQ Server has a number of REST APIs which can be used to extract policy evaluation, violation and remediation data. The Success Metrics get-metrics application extracts common metrics using this API and the view-metrics application aggregates the data into web or text reports.
 
 Using the Success Metrics application is a two step process:
@@ -20,7 +57,7 @@ Using the Success Metrics application is a two step process:
 1. Navigate to the *successmetrics-[releasenumber]* directory (this will be the working directory for the rest of the commands given in this README)
 
    ```bash
-   cd nexusiq-successmetrics-[releasenumber.zip]
+   cd nexusiq-successmetrics-[releasenumber].zip
    ```
 
 ## Fetch metrics from the IQ Server (get-metrics)
@@ -31,87 +68,132 @@ get-metrics can be executed using a [Java 1.8 jar](#running-get-metrics-using-ja
 
 &#9888; For large installations/datasets, the extract should be limited to a shorter period (e.g. previous 6 months or weeks) or subset of organisations and/or applications.
 
-### Get-Metrics Configuration
-
-The configuration for get-metrics is stored in `./get-metrics/config/application.properties`.
-
-#### Metrics
-
-To fetch associated metrics from Nexus IQ the following properties may be set to true.
-
-```text
-metrics.successmetrics
-metrics.applicationsevaluations
-metrics.waivers
-metrics.policyviolations
-metrics.firewall
-```
-
-&#9888; success-metrics should always be set to true.
+### Get-Metrics Command Line Options
 
 #### Nexus IQ server details
 
 These parameters should be updated with the details of the Nexus IQ instance.
 
-```bash
-iq.url
-iq.user
-iq.passwd
-```
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| iq.url | The URL of the IQ server | http://127.0.0.1:8070 |
+| iq.user | The IQ user username | admin |
+| iq.passwd | The IQ user password | admin123 |
 
-&#9888; If you are using the get-metrics Docker image on the Nexus IQ machine then you cannot use `127.0.0.1` in the iq.url. You should instead use `host.docker.internal`.
+&#9888; If you are using the get-metrics Docker image on the Nexus IQ machine then you may not be able to use `127.0.0.1` in the iq.url. You can instead try `host.docker.internal`.
 
-#### Time period for which data should be fetched
+#### Metrics
 
-Data may be collected in monthly or weekly periods by setting the `iq.api.sm.period` to either `month` or `week`.
+To fetch associated metrics from Nexus IQ the following properties may be set to true.
 
-The first period that we should collect data from is controlled by the `iq.api.sm.payload.timeperiod.first` parameter. *This is a mandatory parameter*. The format of this parameter is `2022-01` if `iq.api.sm.period` is set to month or `2022-W01` if `iq.api.sm.period` is set to `week`.
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| metrics.successmetrics | Fetch SuccessMetrics data from IQ | true |
+| metrics.applicationsevaluations | Fetch application evaluation metrics from IQ | false |
+| metrics.waivers | Fetch waiver metrics from IQ | false |
+| metrics.policyviolations | Fetch policy violation metrics from IQ | false |
+| metrics.firewall | Fetch firewal metrics from IQ | false |
 
-The last period that we should collect data from is controlled by the `iq.api.sm.payload.timeperiod.last` parameter. This is an optional parameter. The format of this parameter is `2022-04` if `iq.api.sm.period` is set to month or `2022-W04` if `iq.api.sm.period` is set to `week`.
+#### Time period for which Success Metrics data should be fetched
+
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| timeperiod.duration | The periods over which the IQ data will be aggregated. The value should be month `month` or `week` |
+| first.timeperiod | The first period to collect data from. The format of this parameter is YYYY-MM (for example) `2022-01` if `timeperiod.duration` is set to month or YYYY-Www (for example `2022-W01`) if `timeperiod.duration` is set to `week | 2022-01 |
+| last.timeperiod | The last period to collect data from. The format of this parameter is `2022-01` if `timeperiod.duration` is set to month or `2022-W01` if `timeperiod.duration` is set to `week`. Specifying no value will collect all available data | "" |
 
 #### Limit extracted data to given organisations or applications
 
-To limit data extraction by organisation set  `iq.api.sm.payload.organisation.name` to a  list of comma separated organisation names. This is an optional parameter.
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| organisation.names | Collect data for the named organisations only. A list of comma seperated organisation names should be given. Specifying no value will collect data for all organisations | "" |
+| application.names | Collect data for the named applications only. A list of comma seperated application names should be given. Specifying no value will collect data for all applications | "" |
 
-To limit data extraction by application set  `iq.api.sm.payload.application.name` to a  list of comma separated application names. This is an optional parameter.
-
-If neither of these parameters are set then all organisations and applications will be fetched from Nexus IQ.
-
-If both of these parameter are set then the organistaion setting will be used and application setting will be ignored.
+If both of these parameter are set then the organisation setting will be used and application setting will be ignored.
 
 ### Running get-metrics using Java
 
-#### Get-metrics using Java on Linux/Mac machines
+Examples of running the command from the command line is given here, command line options shown in [Get-metrics Command Line Options](Get-metrics-Command-Line-Options) may be added as required (add `--` in front of the parameter).
+
+#### Get-metrics command line examples using Java on Linux/Mac machines
+
+##### Fetch successmetrics data since 2021-07 on Mac/Linux
 
 ```bash
 cd get-metrics
-sh runapp.sh
+sh runapp.sh --iq.url=https://iq:8070 --iq.user=myuser --iq.passwd=mypassword --first.timeperiod=2021-07
 ```
 
-#### Get-metrics using Java on Windows machines
+##### Fetch successmetrics data between 2021-07 and 2022-01 using Java on Mac/Linux
 
-```dos
+```bash
 cd get-metrics
-runapp.bat
+sh runapp.sh --iq.url=https://iq:8070 --iq.user=myuser --iq.passwd=mypassword --first.timeperiod=2021-07 --last.timeperiod==2022-01
+```
+
+##### Fetch weekly successmetrics data between 2021-W07 and 2022-W01 using Java on Mac/Linux
+
+```bash
+cd get-metrics
+sh runapp.sh --iq.url=https://iq:8070 --iq.user=myuser --iq.passwd=mypassword --timeperiod.duration=week --first.timeperiod=2021-W07 --last.timeperiod==2022-W01
+```
+
+##### Fetch successmetrics data since 2021-07 for organisations org1 and org2 using Java on Mac/Linux
+
+```bash
+cd get-metrics
+sh runapp.sh --iq.url=https://iq:8070 --iq.user=myuser --iq.passwd=mypassword --first.timeperiod=2021-07 --organisation.names=org1,org2
+```
+
+##### Fetch successmetrics data since 2021-07 for applications app1 and app2 using Java on Mac/Linux
+
+```bash
+cd get-metrics
+sh runapp.sh --iq.url=https://iq:8070 --iq.user=myuser --iq.passwd=mypassword --first.timeperiod=2021-07 --application.names=app1,app2
+```
+
+#### Running get-metrics using Java
+
+##### Fetch successmetrics data since 2021-07 using Java on Windows
+
+```bash
+cd get-metrics
+runapp.bat --iq.url=https://iq:8070 --iq.user=myuser --iq.passwd=mypassword --first.timeperiod=2021-07
+```
+
+##### Fetch successmetrics data between 2021-07 and 2022-01 using Java on Windows
+
+```bash
+cd get-metrics
+runapp.bat --iq.url=https://iq:8070 --iq.user=myuser --iq.passwd=mypassword --first.timeperiod=2021-07 --last.timeperiod==2022-01
+```
+
+##### Fetch weekly successmetrics data between 2021-W07 and 2022-W01 using Java on Windows
+
+```bash
+cd get-metrics
+runapp.bat --iq.url=https://iq:8070 --iq.user=myuser --iq.passwd=mypassword --timeperiod.duration=week --first.timeperiod=2021-W07 --last.timeperiod==2022-W01
+```
+
+##### Fetch successmetrics data since 2021-07 for organisations org1 and org2 using Java on Windows
+
+```bash
+cd get-metrics
+runapp.sh --iq.url=https://iq:8070 --iq.user=myuser --iq.passwd=mypassword --first.timeperiod=2021-07 --organisation.names=org1,org2
+```
+
+##### Fetch successmetrics data since 2021-07 for applications app1 and app2 on Mac/Linux
+
+```bash
+cd get-metrics
+runapp.sh --iq.url=https://iq:8070 --iq.user=myuser --iq.passwd=mypassword --first.timeperiod=2021-07 --application.names=app1,app2
 ```
 
 ### Running get-metrics using Docker
 
 &#9888; You must be in the get-metrics directory for the runapp-docker script to work.
 
-#### Get-metrics using Docker on Linux/Mac machines
-
-```bash
-cd get-metrics
-sh runapp-docker.sh
-```
-
-#### Get-metrics using Docker on Windows machines
-
-```dos
-cd get-metrics
-runapp-docker.bat
-```
+Using the [examples above](#running-get-metrics-using-java) simply replace `runapp.sh` with `runapp-docker.sh` for Mac/Linux and `runapp.bat` with `runapp-docker.bat` for Windows.
 
 ## view-metrics
 
@@ -128,59 +210,66 @@ The view-metrics script processes metrics stored in the `./nexusiq` directory an
 
 &#9888; Only fully completed months (or weeks) are included in the data extract.
 
-### View-metrics configuration
-
-View-metrics configuration is stored in the `./successmetrics-[releasenumber]/view-metrics/application.properties` file.
-
-To configure which mode the view-metrics application should run in set the `spring.profiles.active` parameter to `web` for web (interactive) mode or `data` for data extract (non-interactive) mode.
-
-## Running the view-metrics application
-
-### Running view-metrics using Java
-
-#### View-metrics using Java on Linux/Mac machines
-
-```bash
-cd view-metrics
-sh runapp.sh
-```
-
-#### View-metrics using Java on Windows machines
-
-```dos
-cd view-metrics
-runapp.bat
-```
-
-### Running view-metrics using Docker
-
-&#9888; You must be in the get-metrics directory for the runapp-docker script to work.
-
-#### View-metrics using Docker on Linux/Mac machines
-
-```bash
-cd view-metrics
-sh runapp-docker.sh
-```
-
-#### View-metrics using Docker on Windows machines
-
-```dos
-cd view-metrics
-runapp-docker.bat
-```
-
 ### Web (interactive) mode
 
 When running in this mode a web UI for the Success Metrics application is available on the localhost <http://localhost:4040>
 
 ### Data extract (non-interactive) mode
 
-The Success Metrics application will perform calculations on the provided metrics, output files representing this and then close. Three output files can then be found in the `./successmetrics-[releasenumber]/output` directory.
+The Success Metrics application will perform calculations on the provided metrics, output files representing this and then close. Three output files can then be found in the `./datafiles` directory.
 
 1. Metrics Summary PDF
 2. Insights CSV
 3. Data Extract CSV
+
+### View-metrics Command Line Options
+
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| spring.profiles.active | Specifies which mode to run in. Set to `web` for web (interactive) mode or `data` for data extract (non-interactive) mode | web |
+
+## Running the view-metrics application
+
+### Running view-metrics using Java
+
+#### View-metrics command line examples - Mac/ Linux
+
+##### Web (interactive mode) using Java on Linux/Mac
+
+```bash
+cd view-metrics
+sh runapp.sh --spring.profiles.active="web"
+```
+
+##### Data (non-interactive mode) using Java on Linux/Mac
+
+```bash
+cd view-metrics
+sh runapp.sh --spring.profiles.active="data"
+```
+
+#### View-metrics command line examples - Windows
+
+##### Web (interactive mode) using Java on Windows
+
+```dos
+cd view-metrics
+runapp.bat --spring.profiles.active="web"
+```
+
+##### Data (non-interactive mode) using Java on Windows
+
+```dos
+cd view-metrics
+runapp.sh --spring.profiles.active="data"
+```
+
+### Running view-metrics using Docker
+
+&#9888; You must be in the view-metrics directory for the runapp-docker script to work.
+
+Using the [examples above](#running-view-metrics-using-java) simply replace `runapp.sh` with `runapp-docker.sh` for Mac/Linux and `runapp.bat` with `runapp-docker.bat` for Windows.
+
 
 ## The Fine Print
 

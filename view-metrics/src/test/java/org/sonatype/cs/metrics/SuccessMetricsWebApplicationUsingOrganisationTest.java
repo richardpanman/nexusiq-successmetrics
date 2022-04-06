@@ -24,7 +24,7 @@ import java.util.List;
         properties = {
             "metrics.dir=src/test/resources/iqmetrics",
             "spring.profiles.active=web",
-            "iq.api.payload.organisation.name=Auto-apps"
+            "iq.api.payload.organisation.names=Auto-apps"
         },
         webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc

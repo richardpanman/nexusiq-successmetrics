@@ -77,22 +77,8 @@ task packageGetFiles (type: Copy) {
   into "${getMetricsDir}"
 }
 
-task packageViewMetricsConfig (type: Copy) {
-  from('view-metrics/src/main/resources'){
-    include "application.properties"
-  }
-  into "${viewMetricsDir}/config"
-}
-
-task packageGetMetricsConfig (type: Copy) {
-  from('get-metrics/src/main/resources'){
-    include "application.properties"
-  }
-  into "${getMetricsDir}/config"
-}
-
 task release (type: Zip) {
-  dependsOn ':packageViewFiles', ':packageViewMetricsConfig', ':packageGetFiles', ':packageGetMetricsConfig'
+  dependsOn ':packageViewFiles', ':packageGetFiles'
 	from "${applicationname}"
 	archiveName "${applicationname}.zip"
 	destinationDir(file(projectDir))
