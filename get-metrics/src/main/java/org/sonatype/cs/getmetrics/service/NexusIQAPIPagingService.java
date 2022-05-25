@@ -18,21 +18,18 @@ public class NexusIQAPIPagingService {
     private String iqUrl;
     private String iqUser;
     private String iqPasswd;
-    private String iqApi;
 
     public NexusIQAPIPagingService(
             NexusIqApiConnectionService nexusIqApiConnectionService,
             FileIoService fileIoService,
             @Value("${iq.url}") String iqUrl,
             @Value("${iq.user}") String iqUser,
-            @Value("${iq.passwd}") String iqPasswd,
-            @Value("${iq.api}") String iqApi) {
+            @Value("${iq.passwd}") String iqPasswd) {
         this.nexusIqApiConnectionService = nexusIqApiConnectionService;
         this.fileIoService = fileIoService;
         this.iqUrl = iqUrl;
         this.iqUser = iqUser;
         this.iqPasswd = iqPasswd;
-        this.iqApi = iqApi;
     }
 
     public void makeReport(CsvFileService cfs, String endPoint) throws IOException {
@@ -44,7 +41,7 @@ public class NexusIQAPIPagingService {
         do {
             URLConnection urlConnection =
                     nexusIqApiConnectionService.createAuthorizedPagedUrlConnection(
-                            iqUser, iqPasswd, iqUrl, iqApi, endPoint, page, pageSize);
+                            iqUser, iqPasswd, iqUrl, endPoint, page, pageSize);
             InputStream is = urlConnection.getInputStream();
             JsonReader reader = Json.createReader(is);
             JsonObject obj = reader.readObject();

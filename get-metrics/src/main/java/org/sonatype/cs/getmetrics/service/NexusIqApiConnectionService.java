@@ -19,13 +19,12 @@ class NexusIqApiConnectionService {
     NexusIqApiConnectionService() {}
 
     public HttpURLConnection createAuthorisedUrlConnection(
-            String user, String password, String url, String api, String endPoint)
-            throws IOException {
+            String user, String password, String url, String endPoint) throws IOException {
         String encodedAuthString = createEncodedAuthString(user, password);
         if ("/".equals(UtilService.lastChar(url))) {
             url = UtilService.removeLastChar(url);
         }
-        String urlString = url + api + endPoint;
+        String urlString = url + "/api/v2" + endPoint;
         return createUrlConnection(urlString, encodedAuthString);
     }
 
@@ -50,19 +49,21 @@ class NexusIqApiConnectionService {
     }
 
     public HttpURLConnection createAuthorizedPagedUrlConnection(
-            String user,
-            String password,
-            String url,
-            String api,
-            String endPoint,
-            int page,
-            int pageSize)
+            String user, String password, String url, String endPoint, int page, int pageSize)
             throws IOException {
         if ("/".equals(UtilService.lastChar(url))) {
             url = UtilService.removeLastChar(url);
         }
         String urlString =
-                url + api + endPoint + "?" + "page=" + page + "&pageSize=" + pageSize + "&asc=true";
+                url
+                        + "/api/v2"
+                        + endPoint
+                        + "?"
+                        + "page="
+                        + page
+                        + "&pageSize="
+                        + pageSize
+                        + "&asc=true";
         String encodedAuthString = createEncodedAuthString(user, password);
         return createUrlConnection(urlString, encodedAuthString);
     }

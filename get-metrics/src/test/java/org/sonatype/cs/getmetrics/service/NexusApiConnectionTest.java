@@ -49,7 +49,7 @@ public class NexusApiConnectionTest {
         try {
             URLConnection urlConnection =
                     nexusIqApiConnectionService.createAuthorisedUrlConnection(
-                            "user", "password", "http://test.com", "/api/v2", "/test");
+                            "user", "password", "http://test.com", "/test");
             Assertions.assertEquals(
                     "http://test.com/api/v2/test", urlConnection.getURL().toString());
         } catch (IOException e) {
@@ -62,7 +62,7 @@ public class NexusApiConnectionTest {
         try {
             URLConnection urlConnection =
                     nexusIqApiConnectionService.createAuthorizedPagedUrlConnection(
-                            "user", "password", "http://test.com", "/api/v2", "/test", 1, 50);
+                            "user", "password", "http://test.com", "/test", 1, 50);
             Assertions.assertEquals(
                     "http://test.com/api/v2/test?page=1&pageSize=50&asc=true",
                     urlConnection.getURL().toString());

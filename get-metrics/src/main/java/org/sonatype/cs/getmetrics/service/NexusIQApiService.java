@@ -21,27 +21,24 @@ public class NexusIQApiService {
     private String iqUrl;
     private String iqUser;
     private String iqPasswd;
-    private String iqApi;
 
     public NexusIQApiService(
             NexusIqApiConnectionService nexusIqApiConnectionService,
             FileIoService fileIoService,
             @Value("${iq.url}") String iqUrl,
             @Value("${iq.user}") String iqUser,
-            @Value("${iq.passwd}") String iqPasswd,
-            @Value("${iq.api}") String iqApi) {
+            @Value("${iq.passwd}") String iqPasswd) {
         this.nexusIqApiConnectionService = nexusIqApiConnectionService;
         this.fileIoService = fileIoService;
         this.iqUrl = iqUrl;
         this.iqUser = iqUser;
         this.iqPasswd = iqPasswd;
-        this.iqApi = iqApi;
     }
 
     public void makeReport(CsvFileService cfs, String endPoint) throws IOException {
         HttpURLConnection urlConnection =
                 nexusIqApiConnectionService.createAuthorisedUrlConnection(
-                        iqUser, iqPasswd, iqUrl, iqApi, endPoint);
+                        iqUser, iqPasswd, iqUrl, endPoint);
         InputStream is;
         try {
             is = urlConnection.getInputStream();
@@ -50,7 +47,6 @@ public class NexusIQApiService {
                     "IOException raised when trying to reach iqUrl [{}], iqApi [{}], endpoint [{}]"
                             + " (return code [{} - {}]) - no CSV produced",
                     iqUrl,
-                    iqApi,
                     endPoint,
                     urlConnection.getResponseCode(),
                     urlConnection.getResponseMessage());

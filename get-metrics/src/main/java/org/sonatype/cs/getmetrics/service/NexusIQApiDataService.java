@@ -17,25 +17,22 @@ public class NexusIQApiDataService {
     private String iqUrl;
     private String iqUser;
     private String iqPasswd;
-    private String iqApi;
 
     public NexusIQApiDataService(
             NexusIqApiConnectionService nexusIqApiConnectionService,
             @Value("${iq.url}") String iqUrl,
             @Value("${iq.user}") String iqUser,
-            @Value("${iq.passwd}") String iqPasswd,
-            @Value("${iq.api}") String iqApi) {
+            @Value("${iq.passwd}") String iqPasswd) {
         this.nexusIqApiConnectionService = nexusIqApiConnectionService;
         this.iqUrl = iqUrl;
         this.iqUser = iqUser;
         this.iqPasswd = iqPasswd;
-        this.iqApi = iqApi;
     }
 
     public JsonObject getData(String endPoint) throws IOException {
         HttpURLConnection urlConnection =
                 nexusIqApiConnectionService.createAuthorisedUrlConnection(
-                        iqUser, iqPasswd, iqUrl, iqApi, endPoint);
+                        iqUser, iqPasswd, iqUrl, endPoint);
 
         return getJsonReaderFromURLConnection(urlConnection);
     }
